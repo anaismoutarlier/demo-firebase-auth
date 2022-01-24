@@ -1,25 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState, useEffect } from 'react'
+
+//FIREBASE____________________________
+import firebase from './firebase'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const unsubscribe = () => firebase.auth.onAuthStateChanged(user => {
+      console.log(user)
+      if (user) setUser(user)
+      else setUser(null)
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  return !user ? (
+    <div>
+      <h1>Aucun utilisateur.</h1>
+      <button onClick={ () => firebase.login() }>Login</button>
     </div>
-  );
+  ) : (
+    <div>
+      <h1>{ user.displayName }</h1>
+      <button onClick={ () => firebase.logout() }>Logout</button>
+    </div>
+  )
 }
 
 export default App;
