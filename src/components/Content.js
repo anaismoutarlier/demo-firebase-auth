@@ -10,7 +10,7 @@ export default function Content() {
         const unsubscribe = firebase.getMessages(handleSnapshot)
 
         return () => unsubscribe()
-    }, [])
+    })
 
     //FUNCTIONS______________________________
     const handleSnapshot = snapshot => {
